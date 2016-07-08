@@ -34,13 +34,6 @@ public class MainActivity extends AppCompatActivity implements Scanner.DeviceFou
     private BluetoothDevice mDevice = null;
     private RBLService mBluetoothLeService = null;
 
-
-    private void sendSomething() {
-        // Get Gett service and characteristics... or something
-//        connected to device
-//        stopped here
-    }
-
     private final BroadcastReceiver mGattUpdateReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
