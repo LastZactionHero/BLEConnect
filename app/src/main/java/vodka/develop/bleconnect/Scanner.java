@@ -28,7 +28,7 @@ public class Scanner {
     }
 
     public interface DeviceFoundEvent {
-        public void deviceFound(BluetoothDevice device);
+        public void deviceFound(BluetoothDevice device, RBLService leService);
         public void scanError(String message);
     }
 
@@ -59,25 +59,6 @@ public class Scanner {
         }
     };
 
-    private final ServiceConnection mServiceConnection = new ServiceConnection(){
-
-        @Override
-        public void onServiceConnected(ComponentName componentName, IBinder service) {
-            mBluetoothLeService = ((RBLService.LocalBinder) service).getService();
-            if(!mBluetoothLeService.initialize()){
-                mCallback.scanError("Unable to init Bluetooth");
-                return;
-            }
-
-            Log.v("BLEX", "Connecting...");
-            mBluetoothLeService.connect(mDevice.getAddress());
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName componentName) {
-            mBluetoothLeService = null;
-        }
-    };
 
     private void scanLeDevice() {
         new Thread(){
@@ -95,7 +76,7 @@ public class Scanner {
                 Log.v("BLEX", "Done Scanning");
                 mLeScanner.stopScan(mLeScanCallback);
 
-                mCallback.deviceFound(mDevice);
+                mCallback.deviceFound(mDevice, mBluetoothLeService);
             }
         }.start();
     }
